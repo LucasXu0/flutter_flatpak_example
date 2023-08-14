@@ -35,25 +35,25 @@ jobs:
           name: FlutterApp-Archive
           path: counter_app/FlutterApp-Linux-Portable.tar.gz
 
-  build-flatpak:
-    name: Build flatpak
-    needs: build-flutter-app
-    runs-on: ubuntu-latest
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:freedesktop-22.08
-      options: --privileged
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # build-flatpak:
+  #   name: Build flatpak
+  #   needs: build-flutter-app
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: bilelmoussaoui/flatpak-github-actions:freedesktop-22.08
+  #     options: --privileged
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Build .flatpak
-        uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v5
-        with:
-          bundle: FlutterApp.flatpak
-          manifest-path: flathub_repo/com.example.FlutterApp.yml
+  #     - name: Build .flatpak
+  #       uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v5
+  #       with:
+  #         bundle: FlutterApp.flatpak
+  #         manifest-path: flathub_repo/com.example.FlutterApp.yml
 
-      - name: Upload .flatpak artifact to workflow
-        uses: actions/upload-artifact@v3
-        with:
-          name: Flatpak artifact
-          path: FlutterApp.flatpak
+  #     - name: Upload .flatpak artifact to workflow
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: Flatpak artifact
+  #         path: FlutterApp.flatpak
