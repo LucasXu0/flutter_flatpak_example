@@ -36,6 +36,18 @@ dependencies:
   cupertino_icons: ^1.0.2
   desktop_entry: ^1.0.1+1
   dbus: ^0.7.8
+  supabase_flutter:
+    git:
+      url: https://github.com/LucasXu0/supabase-flutter
+      ref: main
+      path: packages/supabase_flutter
+  app_links: ^3.4.3
+
+dependency_overrides:
+  app_links:
+    git:
+      url: https://github.com/LucasXu0/app_links.git
+      ref: 54bc1ba77ce614ccbe27310f9bc56efbbb9ba50a
 
 dev_dependencies:
   flutter_test:

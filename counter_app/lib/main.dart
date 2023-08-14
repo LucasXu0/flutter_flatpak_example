@@ -1,8 +1,18 @@
+import 'package:app_links/src/app_links_platform_interface.dart';
+import 'package:app_links/src/app_links_linux.dart';
 import 'package:dbus/dbus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_flatpak_example/dbus_interface.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: 'https://qjpatenivklvahpwpark.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqcGF0ZW5pdmtsdmFocHdwYXJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODUwMDIzMDYsImV4cCI6MjAwMDU3ODMwNn0.Q5ew-ksJ0kak8jNprJjzkZR1q576q2l6H72OM553Vnc',
+  );
+
   runApp(const MyApp());
 }
 
@@ -50,42 +60,37 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final supabase = Supabase.instance.client;
 
-  final client = DBusClient.session();
-  late final object;
+  String email = 'NONE';
 
   @override
   void initState() {
     super.initState();
 
-    object = ComExampleFlutterAppObject(
-      callback: (urls) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(urls),
-          ),
-        );
-      },
+    SupabaseAuth.instance.registerDBusService(
+      '/io/appflowy/appflowy-flutter/Object',
+      'io.appflowy.appflowy-flutter',
     );
-    client.requestName('com.example.FlutterApp', flags: {
-      // Tailor this to the needs of your application.
-      DBusRequestNameFlag.replaceExisting,
-      DBusRequestNameFlag.allowReplacement,
-    }).then((value) {
-      client.registerObject(object);
-    });
-  }
 
-  void _incrementCounter() {
-    setState(() {
-      object.doOpen(['https://flutter.dev'], Map<String, DBusValue>.from({}));
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+    // Listen to auth state changes
+    supabase.auth.onAuthStateChange.listen((data) {
+      final AuthChangeEvent event = data.event;
+      final Session? session = data.session;
+      if (event == AuthChangeEvent.signedIn) {
+        setState(() {
+          email = session!.user.email!;
+        });
+      } else if (event == AuthChangeEvent.signedOut) {
+        print('User signed out');
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'Did receive supabase callback, User $event, Session $session'),
+        ),
+      );
     });
   }
 
@@ -123,21 +128,36 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              email,
             ),
+            TextButton(
+              onPressed: () async {
+                await supabase.auth.signInWithOAuth(
+                  Provider.google,
+                  redirectTo: 'appflowy-flutter://login-callback',
+                  queryParams: {
+                    'access_type': 'offline',
+                    'prompt': 'consent',
+                  },
+                );
+              },
+              child: const Text('Login with Google'),
+            )
           ],
         ),
       ),
+      // This trailing comma makes auto-formatting nicer for build methods.
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
+  }
+
+  void _incrementCounter() {
+    final x = AppLinksPlatform.instance as AppLinkPluginLinux;
+    x.object?.doOpen(['https://flutter.dev'], Map<String, DBusValue>.from({}));
   }
 }
