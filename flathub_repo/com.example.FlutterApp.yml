@@ -24,8 +24,8 @@ modules:
       - "./build-flatpak.sh"
     sources:
       - type: file
-        url: https://github.com/Merrit/flutter_flatpak_example/releases/download/v1.0.0/FlutterApp-Linux-Portable.tar.gz
-        sha256: 5dc57e4f5b84e6527098cb1e011ef50413c660147f5da7dfbfb507527e44eb83
+        url: https://github.com/LucasXu0/flutter_flatpak_example/releases/download/1.0.0/FlutterApp-Linux-Portable.tar.gz
+        sha256: 7705d59472fabcb37ba04d4b84d2c2d0cf6e4281b0d7ec5fa5d627dfff1889a0
       - type: dir
         path: ../counter_app
       # - type: git

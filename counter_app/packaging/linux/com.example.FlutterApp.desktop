@@ -7,6 +7,8 @@ Comment=An example app that counts
 Categories=Utility;Amusement;
 
 Icon=com.example.FlutterApp
-Exec=flutter_flatpak_example
+Exec=flutter_flatpak_example %u
 Terminal=false
 StartupWMClass=flutter_flatpak_example
+
+MimeType=x-scheme-handler/appflowy-flutter;
