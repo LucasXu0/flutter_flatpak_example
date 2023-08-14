@@ -67,6 +67,7 @@ class ComExampleFlutterAppObject extends DBusObject {
 
   @override
   Future<DBusMethodResponse> handleMethodCall(DBusMethodCall methodCall) async {
+    callback('Method call: ${methodCall.interface}.${methodCall.name}');
     if (methodCall.interface == 'com.example.FlutterApp') {
       if (methodCall.name == 'Activate') {
         if (methodCall.signature != DBusSignature('a{sv}')) {
