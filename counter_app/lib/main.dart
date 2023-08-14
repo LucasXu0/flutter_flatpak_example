@@ -71,8 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initWithAppLink() {
     appLinks = AppLinks();
     appLinks.registerDBusService(
-      '/io/appflowy/AppflowyFlutter/Object',
-      'io.appflowy.AppflowyFlutter',
+      '/com/example/FlutterApp/Object',
+      'com.example.FlutterApp',
     );
     appLinks.stringLinkStream.listen((link) {
       print('Received link: $link');
@@ -90,8 +90,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     SupabaseAuth.instance.registerDBusService(
-      '/io/appflowy/AppflowyFlutter/Object',
-      'io.appflowy.AppflowyFlutter',
+      '/com/example/FlutterApp/Object',
+      'com.example.FlutterApp',
     );
 
     supabase = Supabase.instance.client;

@@ -2,4 +2,4 @@
 Type=Application
 Name=Flutter App Launcher
 Exec=launcher.sh %u
-MimeType=x-scheme-handler/appflowy-flutter-example;
+MimeType=x-scheme-handler/appflowy-flutter;

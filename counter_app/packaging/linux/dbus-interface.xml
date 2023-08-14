@@ -1,5 +1,5 @@
-<node name="/io/appflowy/AppflowyFlutter/Object">
-    <interface name='io.appflowy.AppflowyFlutter'>
+<node name="/com/example/FlutterApp/Object">
+    <interface name='com.example.FlutterApp'>
         <method name='Activate'>
             <arg type='a{sv}' name='platform_data' direction='in'/>
         </method>
