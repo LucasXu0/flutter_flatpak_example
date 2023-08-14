@@ -1,4 +1,6 @@
+import 'package:dbus/dbus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flatpak_example/dbus_interface.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,6 +52,25 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  final client = DBusClient.session();
+  late final object;
+
+  @override
+  void initState() {
+    super.initState();
+
+    object = ComExampleFlutterAppObject(
+      callback: (urls) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(urls),
+          ),
+        );
+      },
+    );
+    client.registerObject(object);
+  }
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -100,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
