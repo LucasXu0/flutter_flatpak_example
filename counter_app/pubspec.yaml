@@ -47,7 +47,7 @@ dependency_overrides:
   app_links:
     git:
       url: https://github.com/LucasXu0/app_links.git
-      ref: 54bc1ba77ce614ccbe27310f9bc56efbbb9ba50a
+      ref: 88c3b011cb967f5547b71e1f9dde0c9c152c5790
 
 dev_dependencies:
   flutter_test:

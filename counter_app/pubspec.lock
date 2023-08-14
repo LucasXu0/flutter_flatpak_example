@@ -5,8 +5,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "54bc1ba77ce614ccbe27310f9bc56efbbb9ba50a"
-      resolved-ref: "54bc1ba77ce614ccbe27310f9bc56efbbb9ba50a"
+      ref: "88c3b011cb967f5547b71e1f9dde0c9c152c5790"
+      resolved-ref: "88c3b011cb967f5547b71e1f9dde0c9c152c5790"
       url: "https://github.com/LucasXu0/app_links.git"
     source: git
     version: "3.4.3"
