@@ -68,7 +68,13 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
     );
-    client.registerObject(object);
+    client.requestName('com.example.FlutterApp', flags: {
+      // Tailor this to the needs of your application.
+      DBusRequestNameFlag.replaceExisting,
+      DBusRequestNameFlag.allowReplacement,
+    }).then((value) {
+      client.registerObject(object);
+    });
   }
 
   void _incrementCounter() {

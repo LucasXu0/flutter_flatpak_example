@@ -8,8 +8,6 @@ Categories=Utility;Amusement;
 
 Icon=com.example.FlutterApp
 Exec=flutter_flatpak_example %u
-Terminal=false
-StartupWMClass=flutter_flatpak_example
 
 DBusActivatable=true
-MimeType=x-scheme-handler/appflowy-flutter;
+Implements=com.example.FlutterApp;
