@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=com.example.FlutterApp
+Exec=flutter_flatpak_example
