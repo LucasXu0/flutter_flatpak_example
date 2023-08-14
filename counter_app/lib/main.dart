@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:app_links/src/app_links_platform_interface.dart';
 import 'package:app_links/src/app_links_linux.dart';
 import 'package:dbus/dbus.dart';
@@ -6,12 +7,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Supabase.initialize(
-    url: 'https://qjpatenivklvahpwpark.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqcGF0ZW5pdmtsdmFocHdwYXJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODUwMDIzMDYsImV4cCI6MjAwMDU3ODMwNn0.Q5ew-ksJ0kak8jNprJjzkZR1q576q2l6H72OM553Vnc',
-  );
 
   runApp(const MyApp());
 }
@@ -60,7 +55,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final supabase = Supabase.instance.client;
+  late final SupabaseClient supabase;
+  late final AppLinks appLinks;
 
   String email = 'NONE';
 
@@ -68,10 +64,37 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    SupabaseAuth.instance.registerDBusService(
-      '/io/appflowy/appflowy-flutter/Object',
-      'io.appflowy.appflowy-flutter',
+    // initWithSupabase();
+    initWithAppLink();
+  }
+
+  void initWithAppLink() {
+    appLinks = AppLinks();
+    appLinks.registerDBusService(
+      '/io/appflowy/AppflowyFlutter/Object',
+      'io.appflowy.AppflowyFlutter',
     );
+    appLinks.stringLinkStream.listen((link) {
+      print('Received link: $link');
+      setState(() {
+        email = link;
+      });
+    });
+  }
+
+  Future<void> initWithSupabase() async {
+    await Supabase.initialize(
+      url: 'https://qjpatenivklvahpwpark.supabase.co',
+      anonKey:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqcGF0ZW5pdmtsdmFocHdwYXJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODUwMDIzMDYsImV4cCI6MjAwMDU3ODMwNn0.Q5ew-ksJ0kak8jNprJjzkZR1q576q2l6H72OM553Vnc',
+    );
+
+    SupabaseAuth.instance.registerDBusService(
+      '/io/appflowy/AppflowyFlutter/Object',
+      'io.appflowy.AppflowyFlutter',
+    );
+
+    supabase = Supabase.instance.client;
 
     // Listen to auth state changes
     supabase.auth.onAuthStateChange.listen((data) {
@@ -135,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () async {
                 await supabase.auth.signInWithOAuth(
                   Provider.google,
-                  redirectTo: 'appflowy-flutter://login-callback',
+                  redirectTo: 'appflowy-flutter-example://login-callback',
                   queryParams: {
                     'access_type': 'offline',
                     'prompt': 'consent',
@@ -158,6 +181,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     final x = AppLinksPlatform.instance as AppLinkPluginLinux;
-    x.object?.doOpen(['https://flutter.dev'], Map<String, DBusValue>.from({}));
+    x.object?.doOpen([
+      'appflowy-flutter-example://login-callback#access_token=eyJhbGciOiJIUzI1NiIsImtpZCI6Ik5wS2tVZVBKVDRBZnI0VG8iLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNjkyMDEzMDEwLCJpYXQiOjE2OTIwMDk0MTAsImlzcyI6Imh0dHBzOi8vcWpwYXRlbml2a2x2YWhwd3Bhcmsuc3VwYWJhc2UuY28vYXV0aC92MSIsInN1YiI6IjA4NjNjODU1LThmNmQtNGNiYy04YTA0LThiNzJjOGVkODVmOSIsImVtYWlsIjoibHVjYXMueHVAYXBwZmxvd3kuaW8iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6Imdvb2dsZSIsInByb3ZpZGVycyI6WyJnb29nbGUiXX0sInVzZXJfbWV0YWRhdGEiOnsiYXZhdGFyX3VybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FBY0hUdGZFZVVvZ1dsbUpaM2hyWVNRdXItSHIxMEhNeXV4cm5oY3hHOGJ6SzM0QT1zOTYtYyIsImN1c3RvbV9jbGFpbXMiOnsiaGQiOiJhcHBmbG93eS5pbyJ9LCJlbWFpbCI6Imx1Y2FzLnh1QGFwcGZsb3d5LmlvIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZ1bGxfbmFtZSI6Ikx1Y2FzIFh1IiwiaXNzIjoiaHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tIiwibmFtZSI6Ikx1Y2FzIFh1IiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FBY0hUdGZFZVVvZ1dsbUpaM2hyWVNRdXItSHIxMEhNeXV4cm5oY3hHOGJ6SzM0QT1zOTYtYyIsInByb3ZpZGVyX2lkIjoiMTExODA4MTI5ODM1MzkzMTYwNzQ1Iiwic3ViIjoiMTExODA4MTI5ODM1MzkzMTYwNzQ1In0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoib2F1dGgiLCJ0aW1lc3RhbXAiOjE2OTIwMDk0MTB9XSwic2Vzc2lvbl9pZCI6ImRiNzhlM2YwLThhYmItNDA0Zi1hNWJhLWUwMDljMjEzZTE0MSJ9.UQ4VR0Vct9TKvHCM2p8BAX6rd9XeEqOt_0BlVPy_4PA&expires_in=3600&provider_refresh_token=1%2F%2F0dCXynOCs-TC0CgYIARAAGA0SNwF-L9Ir7xQFgR7hlNYM9uQajdT9h5RaR-NHTpVM0AMQxuydb3qrVboMSmWN9fv5SQ8Lqit--eg&provider_token=ya29.a0AfB_byCF4MdlcTqhQAqxeYWPuyWY1dX_E-cYHok9xnFk1RADgRq_adhoKRuR4WIpLtUDfxR1ZAVPe98E8OILX8GKPfI5V-TlF0GUqls3IGNLrjS3W9GxJYA5k3i_5stvt_LhsSisLOJnaRMQy89MD1zb9_HsaCgYKAdsSARESFQHsvYlsLg9aKre4JC2FVe8eFTAycg0163&refresh_token=Y_BBLFwgyVC8B8DBvj7leQ&token_type=bearer'
+    ], Map<String, DBusValue>.from({}));
   }
 }

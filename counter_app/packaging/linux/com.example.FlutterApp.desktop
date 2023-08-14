@@ -10,4 +10,4 @@ Icon=com.example.FlutterApp
 Exec=flutter_flatpak_example %u
 
 DBusActivatable=true
-Implements=io.appflowy.appflowy-flutter;
+Implements=io.appflowy.AppflowyFlutter;
