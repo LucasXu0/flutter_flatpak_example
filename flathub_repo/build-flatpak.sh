@@ -43,17 +43,3 @@ cp -r packaging/linux/$projectId.desktop $desktopFileDir/
 metadataDir=/app/share/metainfo
 mkdir -p $metadataDir
 cp -r packaging/linux/$projectId.metainfo.xml $metadataDir/
-
-# Install the D-Bus service file.
-dbusDir=/app/share/dbus-1/services
-mkdir -p $dbusDir
-cp -r packaging/linux/$projectId.service $dbusDir/
-
-# Install the launcher.sh
-chmod +x packaging/linux/launcher.sh
-cp -r packaging/linux/launcher.sh /app/bin/launcher.sh
-
-# Install launcher desktop file.
-launcherDesktopFileDir=/app/share/applications
-mkdir -p $launcherDesktopFileDir
-cp -r packaging/linux/$projectId.launcher.desktop $launcherDesktopFileDir/

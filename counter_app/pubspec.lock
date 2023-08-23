@@ -5,8 +5,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "88c3b011cb967f5547b71e1f9dde0c9c152c5790"
-      resolved-ref: "88c3b011cb967f5547b71e1f9dde0c9c152c5790"
+      ref: c64ce174586267dbab1185ef9acb19b7c49fc7bd
+      resolved-ref: c64ce174586267dbab1185ef9acb19b7c49fc7bd
       url: "https://github.com/LucasXu0/app_links.git"
     source: git
     version: "3.4.3"
@@ -153,6 +153,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.2"
+  gtk:
+    dependency: transitive
+    description:
+      name: gtk
+      sha256: e8ce9ca4b1df106e4d72dad201d345ea1a036cc12c360f1a7d5a758f78ffa42c
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   hive:
     dependency: transitive
     description:

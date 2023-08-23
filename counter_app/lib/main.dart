@@ -69,10 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void initWithAppLink() {
     appLinks = AppLinks();
-    appLinks.registerDBusService(
-      '/com/example/FlutterApp/Object',
-      'com.example.FlutterApp',
-    );
+
     appLinks.stringLinkStream.listen((link) {
       print('Received link: $link');
       setState(() {
